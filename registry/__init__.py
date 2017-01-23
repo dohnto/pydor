@@ -1,1 +1,2 @@
-from api import RegistryAPI
+from api import API
+from registry import Registry
