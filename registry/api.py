@@ -65,7 +65,7 @@ class Entity(object):
 
     def request(self, method, **kwargs):
         logging.debug("Calling %s: %s", method, self.url)
-        return requests.request(method, self.url, **kwargs)
+        return requests.request(method, self.url, verify=not self.registry.insecure, **kwargs)
 
     def get(self, *args, **kwargs):
         return self.request("GET", *args, **kwargs)
@@ -133,7 +133,7 @@ class EntityIterator(object):
             else:
                 parsed_link = link_header.parse(response.headers["Link"]).links
                 assert len(parsed_link) == 1
-                self.relative_url = parsed_link.pop().href
+                self.entity.relative_url = parsed_link.pop().href
 
         return self.cache.popleft()
 
