@@ -2,7 +2,37 @@
 
 **Warning: This code is under development and will change in future version**
 
-## Usage
+## registryctl usage
+
+```bash
+$ ./registryctl list localhost:5000
+Usage: registryctl list [OPTIONS] REGISTRY
+
+Options:
+  --limit INTEGER                 number of namespaces to show
+  --output [text|json|yaml|html|csv]
+  --insecure
+  --help                          Show this message
+                                  and exit.
+
+$ ./registryctl list localhost:5000
+- name/space1
+- name/space2
+...
+
+$ ./registryctl list --limit=1 localhost:5000
+- name/space1
+
+$ ./registryctl list --output=json localhost:5000
+[{"name": "name/space1"}, {"name": "name/space2"} ... ]
+
+$ ./registryctl tags localhost:5000 name/space1
+- latest
+- v1
+- v2
+```
+
+## library usage
 
 Basic demo usage:
 

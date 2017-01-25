@@ -1,0 +1,64 @@
+#!/usr/bin/env python
+
+from __future__ import print_function
+import click
+import registry as registry_lib
+import itertools
+import tablib
+import requests.exceptions
+import logging
+
+@click.group()
+def cli():
+    pass
+
+def format(data, headers, format):
+    if format == "text":
+        for i in data:
+            click.echo("- " + i[0])
+    else:
+        dataset = tablib.Dataset(headers=headers)
+        map(dataset.append, data)
+        click.echo(getattr(dataset, format))
+
+def _list(generator, limit, output, insecure):
+    try:
+        if limit == 0:
+            # list all
+            items = [[n] for n in generator]
+        else:
+            items = [[n] for n in itertools.islice(generator, limit)]
+
+        format(items, ["name"], output)
+    except requests.exceptions.SSLError as e:
+        logging.fatal(e.message)
+        click.echo("Consider using --insecure")
+
+
+@click.command()
+@click.argument('REGISTRY')
+@click.option('--limit', default=20, help='number of namespaces to show')
+@click.option('--output', default='text', type=click.Choice(['text', 'json', 'yaml', 'html', "csv" ]))
+@click.option('--insecure', default=False, is_flag=True)
+def list(registry, limit, output, insecure):
+    generator = registry_lib.API(registry, insecure=insecure).Catalog()
+    _list(generator, limit, output, insecure)
+
+
+@click.command()
+@click.argument('REGISTRY')
+@click.argument('NAMESPACE')
+@click.option('--limit', default=20, help='number of tags to show')
+@click.option('--output', default='text', type=click.Choice(['text', 'json', 'yaml', 'html', "csv" ]))
+@click.option('--insecure', default=False, is_flag=True)
+def tags(registry, namespace, limit, output, insecure):
+    generator = registry_lib.API(registry, insecure=insecure).Tags(namespace)
+    _list(generator, limit, output, insecure)
+
+
+cli.add_command(list)
+cli.add_command(tags)
+
+
+if __name__ == '__main__':
+    cli()
