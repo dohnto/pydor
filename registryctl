@@ -8,7 +8,15 @@ import logging
 import json
 
 import registry as registry_lib
-import tools.tablib
+import tablib
+import tablib.formats
+import tools.tablib_text_module
+
+# add custom text output module of tablib
+tablib.formats.available += (tools.tablib_text_module,)
+
+# get all format titles
+OUTPUT_FORMATS = map(lambda m: m.title, tablib.formats.available)
 
 @click.group()
 def cli():
@@ -40,60 +48,34 @@ def _list(generator, limit, output, insecure):
 @click.command()
 @click.argument('REGISTRY')
 @click.option('--limit', default=20, help='number of namespaces to show')
-@click.option('--output', default='text', type=click.Choice(['text', 'json', 'yaml', 'html', "csv" ]))
+@click.option('--output', default='txt', type=click.Choice(OUTPUT_FORMATS))
 @click.option('--insecure', default=False, is_flag=True)
 def list(registry, limit, output, insecure):
     generator = registry_lib.API(registry, insecure=insecure).Catalog()
     _list(generator, limit, output, insecure)
 
 
-def parse_image_name(image):
-    registry, repository, tag = None, None, None
-    domain_split_point = image.find('.')
-    host_split_point = image.find('/')
-    if domain_split_point != -1 and domain_split_point < host_split_point:
-        registry = image[:host_split_point]
-        rest = image[host_split_point+1:]
-    else:
-        rest = image
-
-    tag_split_point = rest.find(':')
-    if tag_split_point == -1:
-        repository = rest
-    else:
-        repository = rest[:tag_split_point]
-        tag = rest[tag_split_point+1:]
-
-    assert repository != ''
-    return registry, repository, tag
-
-
 @click.command()
 @click.argument('IMAGE')
 @click.option('--limit', default=20, help='number of tags to show')
-@click.option('--output', default='text', type=click.Choice(['text', 'json', 'yaml', 'html', "csv" ]))
+@click.option('--output', default='txt', type=click.Choice(OUTPUT_FORMATS))
 @click.option('--insecure', default=False, is_flag=True)
 def tags(image, limit, output, insecure):
-    registry, namespace, _ = parse_image_name(image)
+    ri = registry_lib.Image.from_image(image)
 
-    if namespace is None or registry is None:
-        raise Exception("Foo")
-    generator = registry_lib.API(registry, insecure=insecure).Tags(namespace)
+    generator = registry_lib.API(ri.registry, insecure=insecure).Tags(ri.repository)
     _list(generator, limit, output, insecure)
 
 
 @click.command()
 @click.argument('TYPE')
 @click.argument('IMAGE')
-@click.option('--output', default='text', type=click.Choice(['text', 'json', 'yaml', 'html', "csv" ]))
+@click.option('--output', default='txt', type=click.Choice(OUTPUT_FORMATS))
 @click.option('--insecure', default=False, is_flag=True)
 def inspect(type, image, output, insecure):
-    registry, namespace, tag = parse_image_name(image)
+    ri = registry_lib.Image.from_image(image)
 
-    if namespace is None or registry is None or tag is None:
-        raise Exception("Foo")
-
-    manifest = registry_lib.API(registry, insecure=insecure).Manifest(namespace, tag).get().json()
+    manifest = registry_lib.API(ri.registry, insecure=insecure).Manifest(ri.repository, ri.reference).get().json()
     labels = json.loads(manifest['history'][0]['v1Compatibility'])['container_config']['Labels']
     labels_to_format = map(lambda k: [k,labels[k]], labels)
     format(labels_to_format, ["name", "value"], output)
