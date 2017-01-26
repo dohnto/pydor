@@ -159,7 +159,7 @@ class Manifest(Entity):
         Entity.__init__(self, registry)
         self.name = name
         self.reference = reference
-        self.url = Manifest.url.format(name, reference)
+        self.relative_url = Manifest.relative_url.format(name, reference)
 
 
 class Blob(Entity):
@@ -169,7 +169,7 @@ class Blob(Entity):
         Entity.__init__(self, registry)
         self.name = name
         self.digest = digest
-        self.url = Manifest.url.format(name, digest)
+        self.relative_url = Manifest.relative_url.format(name, digest)
 
 
 class InitiateBlobUpload(Entity):
@@ -178,7 +178,7 @@ class InitiateBlobUpload(Entity):
     def __init__(self, registry, name):
         Entity.__init__(self, registry)
         self.name = name
-        self.url = Manifest.url.format(name)
+        self.relative_url = Manifest.relative_url.format(name)
 
 
 class BlobUpload(Entity):
@@ -188,4 +188,4 @@ class BlobUpload(Entity):
         Entity.__init__(self, registry)
         self.name = name
         self.uuid = uuid
-        self.url = Manifest.url.format(name, uuid)
+        self.relative_url = Manifest.relative_url.format(name, uuid)

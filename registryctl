@@ -2,11 +2,13 @@
 
 from __future__ import print_function
 import click
-import registry as registry_lib
 import itertools
-import tablib
 import requests.exceptions
 import logging
+import json
+
+import registry as registry_lib
+import tools.tablib
 
 @click.group()
 def cli():
@@ -45,19 +47,60 @@ def list(registry, limit, output, insecure):
     _list(generator, limit, output, insecure)
 
 
+def parse_image_name(image):
+    registry, repository, tag = None, None, None
+    domain_split_point = image.find('.')
+    host_split_point = image.find('/')
+    if domain_split_point != -1 and domain_split_point < host_split_point:
+        registry = image[:host_split_point]
+        rest = image[host_split_point+1:]
+    else:
+        rest = image
+
+    tag_split_point = rest.find(':')
+    if tag_split_point == -1:
+        repository = rest
+    else:
+        repository = rest[:tag_split_point]
+        tag = rest[tag_split_point+1:]
+
+    assert repository != ''
+    return registry, repository, tag
+
+
 @click.command()
-@click.argument('REGISTRY')
-@click.argument('NAMESPACE')
+@click.argument('IMAGE')
 @click.option('--limit', default=20, help='number of tags to show')
 @click.option('--output', default='text', type=click.Choice(['text', 'json', 'yaml', 'html', "csv" ]))
 @click.option('--insecure', default=False, is_flag=True)
-def tags(registry, namespace, limit, output, insecure):
+def tags(image, limit, output, insecure):
+    registry, namespace, _ = parse_image_name(image)
+
+    if namespace is None or registry is None:
+        raise Exception("Foo")
     generator = registry_lib.API(registry, insecure=insecure).Tags(namespace)
     _list(generator, limit, output, insecure)
 
 
+@click.command()
+@click.argument('TYPE')
+@click.argument('IMAGE')
+@click.option('--output', default='text', type=click.Choice(['text', 'json', 'yaml', 'html', "csv" ]))
+@click.option('--insecure', default=False, is_flag=True)
+def inspect(type, image, output, insecure):
+    registry, namespace, tag = parse_image_name(image)
+
+    if namespace is None or registry is None or tag is None:
+        raise Exception("Foo")
+
+    manifest = registry_lib.API(registry, insecure=insecure).Manifest(namespace, tag).get().json()
+    labels = json.loads(manifest['history'][0]['v1Compatibility'])['container_config']['Labels']
+    labels_to_format = map(lambda k: [k,labels[k]], labels)
+    format(labels_to_format, ["name", "value"], output)
+
 cli.add_command(list)
 cli.add_command(tags)
+cli.add_command(inspect)
 
 
 if __name__ == '__main__':
