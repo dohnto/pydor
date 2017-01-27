@@ -1,3 +1,5 @@
+import logging
+
 LATEST_TAG="latest"
 
 class Image(object):
@@ -11,6 +13,18 @@ class Image(object):
     @property
     def reference(self):
         return self.digest or self.tag
+
+    def __repr__(self):
+        result = ""
+        if self.registry:
+            result += self.registry + "/"
+        if self.repository:
+            result += self.repository
+        if self.tag:
+            result += ":" + self.tag
+        if self.digest:
+            result+= "@" + self.digest
+        return result
 
     @staticmethod
     def from_image(image, latest_tag_if_empty=LATEST_TAG):

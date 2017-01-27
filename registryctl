@@ -22,15 +22,6 @@ OUTPUT_FORMATS = map(lambda m: m.title, tablib.formats.available)
 def cli():
     pass
 
-def format(data, headers, format):
-    if format == "text":
-        for i in data:
-            click.echo("- " + i[0])
-    else:
-        dataset = tablib.Dataset(headers=headers)
-        map(dataset.append, data)
-        click.echo(getattr(dataset, format))
-
 def _list(generator, limit, output, insecure):
     try:
         if limit == 0:
@@ -39,7 +30,9 @@ def _list(generator, limit, output, insecure):
         else:
             items = [[n] for n in itertools.islice(generator, limit)]
 
-        format(items, ["name"], output)
+        dataset = tablib.Dataset(headers=["name"])
+        map(dataset.append, items)
+        click.echo(getattr(dataset, output))
     except requests.exceptions.SSLError as e:
         logging.fatal(e.message)
         click.echo("Consider using --insecure")
@@ -48,7 +41,7 @@ def _list(generator, limit, output, insecure):
 @click.command()
 @click.argument('REGISTRY')
 @click.option('--limit', default=20, help='number of namespaces to show')
-@click.option('--output', default='txt', type=click.Choice(OUTPUT_FORMATS))
+@click.option('--output', default=tools.tablib_text_module.title, type=click.Choice(OUTPUT_FORMATS), show_default=True)
 @click.option('--insecure', default=False, is_flag=True)
 def list(registry, limit, output, insecure):
     generator = registry_lib.API(registry, insecure=insecure).Catalog()
@@ -58,7 +51,7 @@ def list(registry, limit, output, insecure):
 @click.command()
 @click.argument('IMAGE')
 @click.option('--limit', default=20, help='number of tags to show')
-@click.option('--output', default='txt', type=click.Choice(OUTPUT_FORMATS))
+@click.option('--output', default=tools.tablib_text_module.title, type=click.Choice(OUTPUT_FORMATS))
 @click.option('--insecure', default=False, is_flag=True)
 def tags(image, limit, output, insecure):
     ri = registry_lib.Image.from_image(image)
@@ -70,7 +63,7 @@ def tags(image, limit, output, insecure):
 @click.command()
 @click.argument('TYPE')
 @click.argument('IMAGE')
-@click.option('--output', default='txt', type=click.Choice(OUTPUT_FORMATS))
+@click.option('--output', default=tools.tablib_text_module.title, type=click.Choice(OUTPUT_FORMATS))
 @click.option('--insecure', default=False, is_flag=True)
 def inspect(type, image, output, insecure):
     ri = registry_lib.Image.from_image(image)
@@ -78,7 +71,10 @@ def inspect(type, image, output, insecure):
     manifest = registry_lib.API(ri.registry, insecure=insecure).Manifest(ri.repository, ri.reference).get().json()
     labels = json.loads(manifest['history'][0]['v1Compatibility'])['container_config']['Labels']
     labels_to_format = map(lambda k: [k,labels[k]], labels)
-    format(labels_to_format, ["name", "value"], output)
+
+    dataset = tablib.Dataset(headers=["name", "value"])
+    map(dataset.append, labels_to_format)
+    click.echo(getattr(dataset, output))
 
 cli.add_command(list)
 cli.add_command(tags)
