@@ -5,31 +5,55 @@
 ## registryctl usage
 
 ```bash
-$ ./registryctl list localhost:5000
+$ ./registryctl list --help
 Usage: registryctl list [OPTIONS] REGISTRY
 
 Options:
   --limit INTEGER                 number of namespaces to show
-  --output [text|json|yaml|html|csv]
+  --output [json|xls|yaml|csv|dbf|tsv|html|latex|xlsx|ods|txt]
+                                  [default: txt]
   --insecure
-  --help                          Show this message
-                                  and exit.
+  --help                          Show this message and exit.
 
-$ ./registryctl list localhost:5000
-- name/space1
-- name/space2
+$ ./registryctl list quay.io
+NAME
+----------------------------
+quay/elasticsearch
+gilliam/base
+gilliam/service-registry
+modcloth/build-essential
 ...
 
-$ ./registryctl list --limit=1 localhost:5000
-- name/space1
+$ ./registryctl list --limit=1 quay.io
+NAME
+----------------------------
+quay/elasticsearch
 
-$ ./registryctl list --output=json localhost:5000
-[{"name": "name/space1"}, {"name": "name/space2"} ... ]
+$ ./registryctl list --output=json quay.io
+[{"name": "quay/elasticsearch"}, {"name": "gilliam/base"}, ...]
 
-$ ./registryctl tags localhost:5000 name/space1
-- latest
-- v1
-- v2
+
+$ /registryctl tags quay.io/coreos/etcd
+name
+--------------
+latest
+test
+v0.4.6
+v0.4.8
+v0.5.0_alpha.0
+...
+
+$ ./registryctl inspect labels quay.io/dohnto/py-registry-client-demo:labels
+name      |value
+----------|-----
+otherlabel|bar
+mylabel   |foo
+
+$ ./registryctl inspect labels quay.io/dohnto/py-registry-client-demo@sha256:8f3a284c5761feb50a9b47939e492e261bde4eba1efe2e45a262d723f463a3bb
+name      |value
+----------|-----
+otherlabel|bar
+mylabel   |foo  
 ```
 
 ## library usage
