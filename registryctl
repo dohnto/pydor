@@ -76,9 +76,20 @@ def inspect(type, image, output, insecure):
     map(dataset.append, inspected_object.data)
     click.echo(getattr(dataset, output))
 
+
+@click.command()
+@click.argument('IMAGE')
+@click.option('--insecure', default=False, is_flag=True)
+def manifest(image, insecure):
+    ri = registry_lib.Image.from_image(image)
+
+    manifest = registry_lib.Manifest(registry_lib.API(ri.registry, insecure=insecure).Manifest(ri.repository, ri.reference).get())
+    click.echo(json.dumps(manifest.json, indent=4))
+
 cli.add_command(list)
 cli.add_command(tags)
 cli.add_command(inspect)
+cli.add_command(manifest)
 
 
 if __name__ == '__main__':
