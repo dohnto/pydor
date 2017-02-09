@@ -1,5 +1,5 @@
 test:
-	python /usr/bin/nosetests --cover-package=registry --with-coverage
+	python /usr/bin/nosetests --cover-package=pydor --with-coverage
 
 run-docker-registry:
 	docker run -d -p 5000:5000 --name registry registry:2.5

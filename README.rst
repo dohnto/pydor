@@ -7,7 +7,7 @@
 
 ```bash
 $ docker run dohnto/pydor list --help
-Usage: registryctl list [OPTIONS] REGISTRY
+Usage: pydor list [OPTIONS] REGISTRY
 
 Options:
   --limit INTEGER                 number of namespaces to show
@@ -58,11 +58,11 @@ mylabel   |foo
 ```
 
 
-## registryctl usage
+## pydor usage
 
 ```bash
-$ ./registryctl list --help
-Usage: registryctl list [OPTIONS] REGISTRY
+$ ./pydor list --help
+Usage: pydor list [OPTIONS] REGISTRY
 
 Options:
   --limit INTEGER                 number of namespaces to show
@@ -71,7 +71,7 @@ Options:
   --insecure
   --help                          Show this message and exit.
 
-$ ./registryctl list quay.io
+$ ./pydor list quay.io
 NAME
 ----------------------------
 quay/elasticsearch
@@ -80,16 +80,16 @@ gilliam/service-registry
 modcloth/build-essential
 ...
 
-$ ./registryctl list --limit=1 quay.io
+$ ./pydor list --limit=1 quay.io
 NAME
 ----------------------------
 quay/elasticsearch
 
-$ ./registryctl list --output=json quay.io
+$ ./pydor list --output=json quay.io
 [{"name": "quay/elasticsearch"}, {"name": "gilliam/base"}, ...]
 
 
-$ /registryctl tags quay.io/coreos/etcd
+$ /pydor tags quay.io/coreos/etcd
 name
 --------------
 latest
@@ -99,13 +99,13 @@ v0.4.8
 v0.5.0_alpha.0
 ...
 
-$ ./registryctl inspect labels quay.io/dohnto/py-registry-client-demo:labels
+$ ./pydor inspect labels quay.io/dohnto/py-registry-client-demo:labels
 name      |value
 ----------|-----
 otherlabel|bar
 mylabel   |foo
 
-$ ./registryctl inspect labels quay.io/dohnto/py-registry-client-demo@sha256:8f3a284c5761feb50a9b47939e492e261bde4eba1efe2e45a262d723f463a3bb
+$ ./pydor inspect labels quay.io/dohnto/py-registry-client-demo@sha256:8f3a284c5761feb50a9b47939e492e261bde4eba1efe2e45a262d723f463a3bb
 name      |value
 ----------|-----
 otherlabel|bar
