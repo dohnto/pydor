@@ -7,9 +7,9 @@ Python client library for Docker Registry v2
 Docker image usage
 ------------------
 
-Getting help::
+Getting help:
 
-      $ docker``dsdsdsdsds`` run dohnto/pydor list --help
+      $ docker run dohnto/pydor list --help
       Usage: pydor list [OPTIONS] REGISTRY
 
       Options:
@@ -75,7 +75,9 @@ You can use also digest instead of tag::
 Library usage
 -------------
 
-Basic demo usage::
+Basic demo usage
+
+.. code:: python
 
     #!/usr/bin/env python
 
