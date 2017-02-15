@@ -7,7 +7,7 @@ Python client library for Docker Registry v2
 Docker image usage
 ------------------
 
-Getting help:
+Getting help::
 
       $ docker run dohnto/pydor list --help
       Usage: pydor list [OPTIONS] REGISTRY
