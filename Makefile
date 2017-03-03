@@ -1,6 +1,10 @@
 test:
 	python /usr/bin/nosetests --cover-package=pydor --with-coverage
 
+package:
+	python setup.py sdist
+	python setup.py bdist_wheel
+
 run-docker-registry:
 	docker run -d -p 5000:5000 --name registry registry:2.5
 
