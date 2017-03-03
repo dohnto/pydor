@@ -4,24 +4,49 @@ Python client library for Docker Registry v2
 
 **Warning: This code is under development and will change in future version**
 
-Docker image usage
-------------------
+Installation and running
+------------------------
 
-Getting help::
+From pypi::
+
+      $ pip install pydor
+      $ pydor --help
+
+From source::
+
+      $ git clone https://github.com/dohnto/pydor.git
+      $ cd pydor
+      $ ./commandline.py --help
+
+Using docker::
 
       $ docker run dohnto/pydor list --help
-      Usage: pydor list [OPTIONS] REGISTRY
+      Usage: commandline.py list [OPTIONS] REGISTRY
+
+        List repositories present in docker registry.
+
+        Examples:
+
+            pydor list quay.io
+            pydor list --limit=0 quay.io
+            pydor list --output=json quay.io
 
       Options:
-        --limit INTEGER                 number of namespaces to show
+        --limit INTEGER                 Number of repositories to show. Use 0 to
+                                        show all (but note that this might be very
+                                        time consuming operation).  [default: 20]
         --output [json|xls|yaml|csv|dbf|tsv|html|latex|xlsx|ods|txt]
-                                        [default: txt]
-        --insecure
+                                        Output format.  [default: txt]
+        --insecure                      If set to true, the registry certificates
+                                        will not be validated.  [default: False]
         --help                          Show this message and exit.
 
+
+Usage
+-----
 List repositories from registry quay.io::
 
-    $ docker run dohnto/pydor list quay.io
+    $ pydor list quay.io
     NAME
     ----------------------------
     quay/elasticsearch
@@ -32,19 +57,19 @@ List repositories from registry quay.io::
 
 Limit the repository list (use 0 for unlimited list)::
     
-    $ docker run dohnto/pydor list --limit=1 quay.io
+    $ pydor list --limit=1 quay.io
     NAME
     ----------------------------
     quay/elasticsearch
 
 List repositories in different output format::
     
-    $ docker run dohnto/pydor list --output=json quay.io
+    $ pydor list --output=json quay.io
     [{"name": "quay/elasticsearch"}, {"name": "gilliam/base"}, ...]
 
 Retrieve tag of image::
     
-    $docker run dohnto/pydor tags quay.io/coreos/etcd
+    $ pydor tags quay.io/coreos/etcd
     name
     --------------
     latest
@@ -56,7 +81,7 @@ Retrieve tag of image::
 
 Retrieve labels of image::
 
-    $ docker run dohnto/pydor inspect labels quay.io/dohnto/py-registry-client-demo:labels
+    $ pydor inspect labels quay.io/dohnto/py-registry-client-demo:labels
     name      |value
     ----------|-----
     otherlabel|bar
@@ -64,7 +89,7 @@ Retrieve labels of image::
 
 You can use also digest instead of tag::
 
-    $ docker run dohnto/pydor inspect labels quay.io/dohnto/py-registry-client-demo@sha256:8f3a284c5761feb50a9b47939e492e261bde4eba1efe2e45a262d723f463a3bb
+    $ pydor inspect labels quay.io/dohnto/py-registry-client-demo@sha256:8f3a284c5761feb50a9b47939e492e261bde4eba1efe2e45a262d723f463a3bb
     name      |value
     ----------|-----
     otherlabel|bar
