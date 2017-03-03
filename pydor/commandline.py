@@ -20,7 +20,9 @@ OUTPUT_FORMATS = map(lambda m: m.title, tablib.formats.available)
 
 @click.group()
 def cli():
-    pass
+    """
+    Pydor is a command line utility for remote querying of Docker Registry v2.
+    """
 
 def _list(generator, limit, output, insecure):
     try:
@@ -40,32 +42,80 @@ def _list(generator, limit, output, insecure):
 
 @click.command()
 @click.argument('REGISTRY')
-@click.option('--limit', default=20, help='number of namespaces to show')
-@click.option('--output', default=pydor.tools.tablib_text_module.title, type=click.Choice(OUTPUT_FORMATS), show_default=True)
-@click.option('--insecure', default=False, is_flag=True)
+@click.option('--limit', default=20, help='Number of repositories to show. Use 0 to show all (but note that this might be very time consuming operation).', show_default=True)
+@click.option('--output', default=pydor.tools.tablib_text_module.title, type=click.Choice(OUTPUT_FORMATS), show_default=True, help="Output format.")
+@click.option('--insecure', default=False, is_flag=True, show_default=True, help="If set to true, the registry certificates will not be validated.")
 def list(registry, limit, output, insecure):
+    """
+    List repositories present in docker registry.
+
+    Examples:
+
+    \b
+        pydor list quay.io
+        pydor list --limit=0 quay.io
+        pydor list --output=json quay.io
+    """
     generator = pydor.API(registry, insecure=insecure).Catalog()
     _list(generator, limit, output, insecure)
 
 
 @click.command()
-@click.argument('IMAGE')
-@click.option('--limit', default=20, help='number of tags to show')
-@click.option('--output', default=pydor.tools.tablib_text_module.title, type=click.Choice(OUTPUT_FORMATS))
-@click.option('--insecure', default=False, is_flag=True)
-def tags(image, limit, output, insecure):
-    ri = pydor.Image.from_image(image)
+@click.argument('REPOSITORY')
+@click.option('--limit', default=20, help='Number of tags to show. Use 0 to show all (but note that this might be very time consuming operation).', show_default=True)
+@click.option('--output', default=pydor.tools.tablib_text_module.title, type=click.Choice(OUTPUT_FORMATS), help="Output format.", show_default=True)
+@click.option('--insecure', default=False, is_flag=True, help="If set to true, the registry certificates will not be validated.", show_default=True)
+def tags(repository, limit, output, insecure):
+    """
+    List tags of a given repository.
+
+    Examples:
+
+    \b
+        pydor tags quay.io/coreos/etcd
+        pydor tags --limit=0 quay.io/coreos/etcd
+        pydor tags --output=yaml quay.io/coreos/etcd
+    """
+    ri = pydor.Image.from_image(repository)
 
     generator = pydor.API(ri.registry, insecure=insecure).Tags(ri.repository)
     _list(generator, limit, output, insecure)
 
 
 @click.command()
+@click.argument('IMAGE')
+@click.option('--insecure', default=False, is_flag=True, help="If set to true, the registry certificates will not be validated.", show_default=True)
+def manifest(image, insecure):
+    """
+    Retrieve a manifest from a docker registry.
+
+    Examples:
+
+    \b
+        pydor manifest quay.io/coreos/etcd:latest
+
+    """
+    ri = pydor.Image.from_image(image)
+
+    manifest = pydor.Manifest(pydor.API(ri.registry, insecure=insecure).Manifest(ri.repository, ri.reference).get())
+    click.echo(json.dumps(manifest.json, indent=4))
+
+
+@click.command(short_help="Inspect an attribute of a docker image in docker registry.")
 @click.argument('TYPE', type=click.Choice(pydor.MANIFEST_PROPERTIES))
 @click.argument('IMAGE')
-@click.option('--output', default=pydor.tools.tablib_text_module.title, type=click.Choice(OUTPUT_FORMATS))
-@click.option('--insecure', default=False, is_flag=True)
+@click.option('--output', default=pydor.tools.tablib_text_module.title, type=click.Choice(OUTPUT_FORMATS), show_default=True, help="Output format.")
+@click.option('--insecure', default=False, is_flag=True,help="If set to true, the registry certificates will not be validated.", show_default=True)
 def inspect(type, image, output, insecure):
+    """
+    Inspect an attribute of a docker image in remote docker registry. TYPE is one of [labels, author, entrypoint, cmd]
+
+    Examples:
+
+    \b
+        pydor inspect cmd quay.io/coreos/etcd:latest
+    """
+
     ri = pydor.Image.from_image(image)
 
     manifest = pydor.Manifest(pydor.API(ri.registry, insecure=insecure).Manifest(ri.repository, ri.reference).get())
@@ -75,16 +125,6 @@ def inspect(type, image, output, insecure):
     dataset = tablib.Dataset(headers=inspected_object.headers)
     map(dataset.append, inspected_object.data)
     click.echo(getattr(dataset, output))
-
-
-@click.command()
-@click.argument('IMAGE')
-@click.option('--insecure', default=False, is_flag=True)
-def manifest(image, insecure):
-    ri = pydor.Image.from_image(image)
-
-    manifest = pydor.Manifest(pydor.API(ri.registry, insecure=insecure).Manifest(ri.repository, ri.reference).get())
-    click.echo(json.dumps(manifest.json, indent=4))
 
 cli.add_command(list)
 cli.add_command(tags)
