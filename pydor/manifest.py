@@ -73,8 +73,7 @@ class Manifest(object):
                 self._entrypoint = self.history_latest_layer['config']['Entrypoint']
             except KeyError as e:
                 self._entrypoint = None
-        print(self._entrypoint)
-        return Entrypoint(self._entrypoint)
+        return Entrypoint(self._entrypoint or [])
 
     @property
     def cmd(self):
@@ -82,5 +81,5 @@ class Manifest(object):
             try:
                 self._cmd = self.history_latest_layer['config']['Cmd']
             except KeyError as e:
-                self._cmd = None
+                self._cmd = []
         return Cmd(self._cmd)
