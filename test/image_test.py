@@ -109,6 +109,13 @@ class TestImagePositive(unittest.TestCase):
         self.assertEqual(image.tag, None)
         self.assertEqual(image.digest, None)
 
+    def test_parsing_registry2(self):
+        image = pydor.image.Image.from_image("localhost:5000/a", latest_tag_if_empty=None)
+        self.assertEqual(image.registry, "localhost:5000")
+        self.assertEqual(image.repository, "a")
+        self.assertEqual(image.tag, None)
+        self.assertEqual(image.digest, None)
+
 class TestImageNegative(unittest.TestCase):
     def test_parsing_basic(self):
         with self.assertRaises(AttributeError):

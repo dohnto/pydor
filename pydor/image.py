@@ -27,8 +27,16 @@ class Image(object):
         return result
 
     @staticmethod
+    def check_token_validity(token, invalid_letters):
+        if token:
+            for letter in invalid_letters:
+                if letter in token:
+                    raise AttributeError()
+
+    @staticmethod
     def from_image(image, latest_tag_if_empty=LATEST_TAG):
         registry, repository, tag, digest = None, None, None, None
+        rest = None
 
         domain_split_point = image.find('.')
         host_split_point = image.find('/')
@@ -38,27 +46,36 @@ class Image(object):
             registry = image[:host_split_point]
             rest = image[host_split_point+1:]
         elif image.startswith("localhost:") or image.startswith("localhost/"):
-            registry = image[:host_split_point]
-            rest = image[host_split_point+1:]
+            if host_split_point == -1:
+                # only registry part
+                registry = image
+            else:
+                registry = image[:host_split_point]
+                rest = image[host_split_point+1:]
         else:
             rest = image
 
-        # we must test digest occurence before tag
-        digest_split_point = rest.find('@')
-        if digest_split_point == -1:
-            # there is no digest so there might be a tag
-            tag_split_point = rest.find(':')
-            if tag_split_point == -1:
-                repository = rest
-                if latest_tag_if_empty:
-                    tag = latest_tag_if_empty
+        if rest:
+            # we must test digest occurence before tag
+            digest_split_point = rest.find('@')
+            if digest_split_point == -1:
+                # there is no digest so there might be a tag
+                tag_split_point = rest.find(':')
+                if tag_split_point == -1:
+                    repository = rest
+                    if latest_tag_if_empty:
+                        tag = latest_tag_if_empty
+                else:
+                    repository = rest[:tag_split_point]
+                    tag = rest[tag_split_point+1:]
             else:
-                repository = rest[:tag_split_point]
-                tag = rest[tag_split_point+1:]
-        else:
-            repository = rest[:digest_split_point]
-            digest = rest[digest_split_point+1:]
+                repository = rest[:digest_split_point]
+                digest = rest[digest_split_point+1:]
 
         assert repository != ''
+        Image.check_token_validity(registry, "|@#")
+        Image.check_token_validity(repository, "|@#")
+        Image.check_token_validity(tag, "|@#")
+        Image.check_token_validity(digest, "|@#")
 
         return Image(registry, repository, tag, digest)
