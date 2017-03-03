@@ -38,6 +38,6 @@ setup(
     packages=find_packages(exclude=['test']),
     install_requires=['click', "LinkHeader", "requests", "six", "tablib", "urllib3"],
     entry_points = {
-        'console_scripts': ['pydor=pydor.commandline:cli'],
+        'console_scripts': ['pydor=commandline:cli'],
     }
 )
