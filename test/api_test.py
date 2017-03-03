@@ -40,7 +40,6 @@ class TestApi(unittest.TestCase):
     @requests_mock.mock()
     def test_connection_error(self, m):
         api = pydor.api.API('registry.test')
-        m.get('http://registry:test/v2/_catalog')
-        result = api.Base("a").get()
-        self.assertEqual(result.status_code, requests.codes.ok)
-        self.assertEqual(result.text, '{"name":"a","tags":["latest"]}')
+        m.get('https://registry.test/v2/', exc=requests.exceptions.ConnectTimeout)
+        with self.assertRaises(requests.exceptions.ConnectTimeout):
+            result = api.Base().get()
