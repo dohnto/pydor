@@ -12,11 +12,10 @@ From pypi::
       $ pip install pydor
       $ pydor --help
 
-From source::
+From github::
 
-      $ git clone https://github.com/dohnto/pydor.git
-      $ cd pydor
-      $ ./commandline.py --help
+      $ pip install git+https://github.com/dohnto/pydor
+      $ pydor --help
 
 Using docker::
 
