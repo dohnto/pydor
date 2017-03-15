@@ -19,7 +19,7 @@ with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
 
 setup(
     name='pydor',
-    version='0.2.0',
+    version='0.2.2',
     description='Python docker registry (distribution) client',
     long_description=long_description,
     url='https://github.com/dohnto/pydor',
@@ -38,6 +38,6 @@ setup(
     packages=find_packages(exclude=['test']),
     install_requires=['click', "LinkHeader", "requests", "six", "tablib", "urllib3"],
     entry_points = {
-        'console_scripts': ['pydor=commandline:cli'],
+        'console_scripts': ['pydor=pydor.commandline:cli'],
     }
 )
