@@ -1,0 +1,11 @@
+{
+  "errors": [
+    {
+      "code": "NAME_UNKNOWN",
+      "message": "repository name not known to registry",
+      "detail": {
+        "name": "devops/fluentd"
+      }
+    }
+  ]
+}

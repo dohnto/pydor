@@ -5,6 +5,7 @@ import json
 import base64
 import link_header
 import collections
+from .errors import TagNotFound, RepoNotFound
 
 import registry
 
@@ -92,6 +93,7 @@ class Base(Entity):
 class Catalog(Entity):
     relative_url = "/v2/_catalog"
     response_key = "repositories"
+    not_found_error = RepoNotFound
 
     def __init__(self, registry):
         Entity.__init__(self, registry)
@@ -124,7 +126,12 @@ class EntityIterator(object):
                 raise StopIteration
 
             response = self.entity.get(params=self.params)
-            self.cache = collections.deque(response.json()[self.entity.response_key])
+            js = response.json()
+
+            # if given key is not present in json, something went wrong and for now we just quit
+            if self.entity.response_key not in js:
+                raise self.entity.not_found_error()
+            self.cache = collections.deque(js[self.entity.response_key])
 
             # if there is no more link, this is our last iteration
             # otherwise we parse the url for next iteration
@@ -141,6 +148,7 @@ class EntityIterator(object):
 class Tags(Entity):
     relative_url = "/v2/{}/tags/list"
     response_key = "tags"
+    not_found_error = TagNotFound
 
     def __init__(self, registry, name):
         Entity.__init__(self, registry)
