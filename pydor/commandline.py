@@ -11,6 +11,7 @@ import pydor
 import tablib
 import tablib.formats
 import pydor.tools.tablib_text_module
+from pydor.errors import EntityNotFound
 
 # add custom text output module of tablib
 tablib.formats.available += (pydor.tools.tablib_text_module,)
@@ -24,6 +25,7 @@ def cli():
     Pydor is a command line utility for remote querying of Docker Registry v2.
     """
 
+
 def _list(generator, limit, output, insecure):
     try:
         if limit == 0:
@@ -35,9 +37,13 @@ def _list(generator, limit, output, insecure):
         dataset = tablib.Dataset(headers=["name"])
         map(dataset.append, items)
         click.echo(getattr(dataset, output))
+    except EntityNotFound as e:
+        click.echo("Entity not found", err=True)
+        click.get_current_context().exit(2)
     except requests.exceptions.SSLError as e:
         logging.fatal(e.message)
         click.echo("Consider using --insecure")
+        click.get_current_context().exit(1)
 
 
 @click.command()
