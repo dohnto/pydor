@@ -129,8 +129,13 @@ class EntityIterator(object):
             js = response.json()
 
             # if given key is not present in json, something went wrong and for now we just quit
-            if self.entity.response_key not in js:
-                raise self.entity.not_found_error()
+            if "errors" in js:
+                first_error = js["errors"][0]
+                message = "{}: {}".format(first_error["code"], first_error["message"])
+                if "detail" in first_error and "name" in first_error["detail"]:
+                    message += " ({})".format(first_error["detail"]["name"])
+                raise self.entity.not_found_error(message)
+
             self.cache = collections.deque(js[self.entity.response_key])
 
             # if there is no more link, this is our last iteration

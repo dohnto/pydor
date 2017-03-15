@@ -38,7 +38,7 @@ def _list(generator, limit, output, insecure):
         map(dataset.append, items)
         click.echo(getattr(dataset, output))
     except EntityNotFound as e:
-        click.echo("Entity not found", err=True)
+        click.echo(e.message, err=True)
         click.get_current_context().exit(2)
     except requests.exceptions.SSLError as e:
         logging.fatal(e.message)

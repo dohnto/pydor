@@ -16,4 +16,4 @@ class TestCommandline(unittest.TestCase):
             runner = click.testing.CliRunner()
             result = runner.invoke(pydor.commandline.tags, ["--output", "json", "registry.test/devops/fluentd"])
             self.assertEqual(result.exit_code, 2)
-            self.assertEqual(result.output, "Entity not found\n")
+            self.assertEqual(result.output, "NAME_UNKNOWN: repository name not known to registry (devops/fluentd)\n")
