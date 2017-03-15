@@ -1,0 +1,66 @@
+{
+   "schemaVersion": 1, 
+   "tag": "latest", 
+   "name": "coreos/etcd", 
+   "architecture": "amd64", 
+   "fsLayers": [
+      {
+         "blobSum": "sha256:a3ed95caeb02ffe68cdd9fd84406680ae93d633cb16422d00e8a7c22955b46d4"
+      }, 
+      {
+         "blobSum": "sha256:a3ed95caeb02ffe68cdd9fd84406680ae93d633cb16422d00e8a7c22955b46d4"
+      }, 
+      {
+         "blobSum": "sha256:fe0046bf052145e7462bb9a51741371422a60e223d1da95088030ea80caa6b07"
+      }, 
+      {
+         "blobSum": "sha256:ac5efa18f05e281be588e5697f32765afd285cc9ff17165579e1d8a0796aa1b1"
+      }, 
+      {
+         "blobSum": "sha256:96895a4cae240d95ce781b53cbc3cb001e91c8f71ad201a29c6145425f5aecd0"
+      }, 
+      {
+         "blobSum": "sha256:5012e341a17367def9e9e62e9e73173df3fad5be830da49a0f083fd3ad7b0bc9"
+      }, 
+      {
+         "blobSum": "sha256:0a8490d0dfd399b3a50e9aaa81dba0d425c3868762d46526b41be00886bcc28b"
+      }
+   ], 
+   "history": [
+      {
+         "v1Compatibility": "{\"architecture\":\"amd64\",\"config\":{\"Hostname\":\"11fbdc1f630f\",\"Domainname\":\"\",\"User\":\"\",\"AttachStdin\":false,\"AttachStdout\":false,\"AttachStderr\":false,\"ExposedPorts\":{\"2379/tcp\":{},\"2380/tcp\":{}},\"Tty\":false,\"OpenStdin\":false,\"StdinOnce\":false,\"Env\":[\"PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin\"],\"Cmd\":[\"/usr/local/bin/etcd\"],\"ArgsEscaped\":true,\"Image\":\"sha256:f835a9c997fb908a4170aeb6c899d0f095ff83b09fba37b3dbc01f40d16a9a3b\",\"Volumes\":null,\"WorkingDir\":\"\",\"Entrypoint\":null,\"OnBuild\":[],\"Labels\":{}},\"container\":\"c307270c46a632745bbad7e47da280610e716831ccb7ee539e1106ac67d45742\",\"container_config\":{\"Hostname\":\"11fbdc1f630f\",\"Domainname\":\"\",\"User\":\"\",\"AttachStdin\":false,\"AttachStdout\":false,\"AttachStderr\":false,\"ExposedPorts\":{\"2379/tcp\":{},\"2380/tcp\":{}},\"Tty\":false,\"OpenStdin\":false,\"StdinOnce\":false,\"Env\":[\"PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin\"],\"Cmd\":[\"/bin/sh\",\"-c\",\"#(nop) CMD [\\\"/usr/local/bin/etcd\\\"]\"],\"ArgsEscaped\":true,\"Image\":\"sha256:f835a9c997fb908a4170aeb6c899d0f095ff83b09fba37b3dbc01f40d16a9a3b\",\"Volumes\":null,\"WorkingDir\":\"\",\"Entrypoint\":null,\"OnBuild\":[],\"Labels\":{}},\"created\":\"2017-02-24T18:08:15.246221651Z\",\"docker_version\":\"1.11.1\",\"id\":\"c8cd294b889d937c36bb223dc3e3f39cf2a3d2a4315af6fca6751fba4ea890b2\",\"os\":\"linux\",\"parent\":\"16c2298de29f376618912241b97a117f6deba7e5a6ad3fa00f2043fbd6fe3b19\",\"throwaway\":true}"
+      }, 
+      {
+         "v1Compatibility": "{\"id\":\"16c2298de29f376618912241b97a117f6deba7e5a6ad3fa00f2043fbd6fe3b19\",\"parent\":\"ee61447bf34c808029c6ab393524c358fb7f9083377e1ac447a626f262be8c3e\",\"created\":\"2017-02-24T18:08:15.117867088Z\",\"container_config\":{\"Cmd\":[\"/bin/sh -c #(nop) EXPOSE 2379/tcp 2380/tcp\"]},\"throwaway\":true}"
+      }, 
+      {
+         "v1Compatibility": "{\"id\":\"ee61447bf34c808029c6ab393524c358fb7f9083377e1ac447a626f262be8c3e\",\"parent\":\"022c17bca10d37ed555bec0ca4d043c736ae43a9dbede749adf378f6618d7447\",\"created\":\"2017-02-24T18:08:14.96036301Z\",\"container_config\":{\"Cmd\":[\"/bin/sh -c mkdir -p /var/lib/etcd/\"]}}"
+      }, 
+      {
+         "v1Compatibility": "{\"id\":\"022c17bca10d37ed555bec0ca4d043c736ae43a9dbede749adf378f6618d7447\",\"parent\":\"463fb4d0221a8754d2ae5ad9f4dd8578cb56c2419e2adb8a31fb9db541c24db2\",\"created\":\"2017-02-24T18:08:14.252675122Z\",\"container_config\":{\"Cmd\":[\"/bin/sh -c mkdir -p /var/etcd/\"]}}"
+      }, 
+      {
+         "v1Compatibility": "{\"id\":\"463fb4d0221a8754d2ae5ad9f4dd8578cb56c2419e2adb8a31fb9db541c24db2\",\"parent\":\"925e65b85a19569c15d9725231aeb93d7fc082228674e3d617645c2fc6df61ba\",\"created\":\"2017-02-24T18:08:13.208084007Z\",\"container_config\":{\"Cmd\":[\"/bin/sh -c #(nop) ADD file:6cd45932a6f1d74b24e8319ea9bbb33d7ba4374426ec780df074cea445e3ec46 in /usr/local/bin/\"]}}"
+      }, 
+      {
+         "v1Compatibility": "{\"id\":\"925e65b85a19569c15d9725231aeb93d7fc082228674e3d617645c2fc6df61ba\",\"parent\":\"f27070a99cdf639117a9045122663e00e134b1ed8a233ae99275c55802d35e92\",\"created\":\"2017-02-24T18:08:12.865075569Z\",\"container_config\":{\"Cmd\":[\"/bin/sh -c #(nop) ADD file:88b6e40e837d662c80cfdedeefee641c074310e4a81ee73c16683b92b62806ad in /usr/local/bin/\"]}}"
+      }, 
+      {
+         "v1Compatibility": "{\"id\":\"f27070a99cdf639117a9045122663e00e134b1ed8a233ae99275c55802d35e92\",\"created\":\"2016-12-27T18:17:25.702182968Z\",\"container_config\":{\"Cmd\":[\"/bin/sh -c #(nop) ADD file:92ab746eb22dd3ed2b87469c719adf3c1bed7302653bbd76baafd7cfd95e911e in / \"]}}"
+      }
+   ], 
+   "signatures": [
+      {
+         "header": {
+            "alg": "RS256", 
+            "jwk": {
+               "e": "AQAB", 
+               "kty": "RSA", 
+               "n": "yB40ou1GMvIxYs1jhxWaeoDiw3oa0_Q2UJThUPtArvO0tRzaun9FnSphhOEHIGcezfq95jy-3MN-FIjmsWgbPHY8lVDS38fF75aCw6qkholwqjmMtUIgPNYoMrg0rLUE5RRyJ84-hKf9Fk7V3fItp1mvCTGKaS3ze-y5dTTrfbNGE7qG638Dla2Fuz-9CNgRQj0JH54o547WkKJC-pG-j0jTDr8lzsXhrZC7lJas4yc-vpt3D60iG4cW_mkdtIj52ZFEgHZ56sUj7AhnNVly0ZP9W1hmw4xEHDn9WLjlt7ivwARVeb2qzsNdguUitcI5hUQNwpOVZ_O3f1rUIL_kRw"
+            }
+         }, 
+         "protected": "eyJmb3JtYXRUYWlsIjogIkNuMCIsICJmb3JtYXRMZW5ndGgiOiA0NjI3LCAidGltZSI6ICIyMDE3LTAyLTI0VDE4OjE3OjI1WiJ9", 
+         "signature": "E-73VPP8IftiNOBaEIgOKFafzyGHNKw1fziaGc6X9C7LaCBe4Z7xe1RZhdgZGATOENIif1lEQ6g387RkRttgyFTKLSh4EkcQ6NrNXzERTPXlKRGQ3ZzwlJR32aSIbzrLcyKPCqoXFnv5_UGm6l2rT0ymH3ctaV0JeyfkMdgxqsKCsWlc5bn9LlFHsM2Lyb0zzvQmhO96FOC0xEAaP8Z2thwa__Q4_UGwezcSesaq44eQsF8fdDiRSMxJC-Oi1E1-US5rfBIjVezbZ54H3cyIikhP7-_jIwctrsTtMx2WHlPgqogAb9xVcBkDB5g_kegaSuzRnxUb6V7fU6d1zExeTw"
+      }
+   ]
+}
