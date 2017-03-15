@@ -136,6 +136,9 @@ class EntityIterator(object):
                     message += " ({})".format(first_error["detail"]["name"])
                 raise self.entity.not_found_error(message)
 
+            if js[self.entity.response_key] is None:
+                raise StopIteration
+
             self.cache = collections.deque(js[self.entity.response_key])
 
             # if there is no more link, this is our last iteration
