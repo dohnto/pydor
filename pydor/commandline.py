@@ -11,7 +11,7 @@ import pydor
 import tablib
 import tablib.formats
 import pydor.tools.tablib_text_module
-from pydor.errors import EntityNotFound
+import pydor.errors
 
 # add custom text output module of tablib
 tablib.formats.available += (pydor.tools.tablib_text_module,)
@@ -37,13 +37,13 @@ def _list(generator, limit, output, insecure):
         dataset = tablib.Dataset(headers=["name"])
         map(dataset.append, items)
         click.echo(getattr(dataset, output))
-    except EntityNotFound as e:
+    except pydor.errors.EntityNotFound as e:
         click.echo(e.message, err=True)
-        click.get_current_context().exit(2)
+        click.get_current_context().exit(pydor.errors.ENTITY_NOT_FOUND)
     except requests.exceptions.SSLError as e:
         logging.fatal(e.message)
         click.echo("Consider using --insecure")
-        click.get_current_context().exit(1)
+        click.get_current_context().exit(pydor.errors.SSL_ERROR_CODE)
 
 
 @click.command()
@@ -132,10 +132,42 @@ def inspect(type, image, output, insecure):
     map(dataset.append, inspected_object.data)
     click.echo(getattr(dataset, output))
 
+
+@click.command(short_help="Ping a docker registry to check if the address is a valid docker registry and is responding.")
+@click.argument('REGISTRY')
+@click.option('--insecure', default=False, is_flag=True,help="If set to true, the registry certificates will not be validated.", show_default=True)
+def ping(registry, insecure):
+    """
+    Ping a docker registry to check if the address is a valid docker registry and is responding.
+
+    Examples:
+
+    \b
+        pydor ping quay.io
+    """
+    try:
+        response = pydor.API(registry, insecure).Base().get()
+    except requests.exceptions.SSLError as e:
+        logging.fatal(e.message)
+        click.echo("Consider using --insecure")
+        click.get_current_context().exit(pydor.errors.SSL_ERROR_CODE)
+
+    if response.status_code == requests.codes.ok:
+        click.echo("OK")
+    elif response.status_code == requests.codes.not_found:
+        click.echo("Error: registry does not implement v2 API")
+        click.get_current_context().exit(pydor.errors.NOT_V2_REGISTRY)
+    elif response.status_code == requests.codes.unauthorized:
+        click.echo("Authorization not implemented yet... exiting")
+        click.get_current_context().exit(pydor.errors.NOT_IMPLEMENTED)
+    else:
+        raise NotImplementedError()
+
 cli.add_command(list)
 cli.add_command(tags)
 cli.add_command(inspect)
 cli.add_command(manifest)
+cli.add_command(ping)
 
 
 if __name__ == '__main__':
