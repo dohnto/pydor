@@ -163,12 +163,45 @@ def ping(registry, insecure):
     else:
         raise NotImplementedError()
 
+
+@click.command(short_help="Checks whether image reference exists")
+@click.argument('IMAGE')
+@click.option('--insecure', default=False, is_flag=True,help="If set to true, the registry certificates will not be validated.", show_default=True)
+def exists(image, insecure):
+    """
+    Checks whether image reference exists
+
+    Examples:
+
+    \b
+        pydor exists quay.io/gilliam/base:latest
+    """
+    try:
+        ri = pydor.Image.from_image(image)
+        response = pydor.API(ri.registry, insecure).Manifest(ri.repository, ri.tag or ri.digest).get()
+    except requests.exceptions.SSLError as e:
+        logging.fatal(e.message)
+        click.echo("Consider using --insecure")
+        click.get_current_context().exit(pydor.errors.SSL_ERROR_CODE)
+
+    if response.status_code == requests.codes.ok:
+        click.echo("OK")
+    elif response.status_code == requests.codes.not_found:
+        click.echo("NOT FOUND")
+        click.get_current_context().exit(pydor.errors.IMAGE_NOT_FOUND)
+    elif response.status_code == requests.codes.unauthorized:
+        click.echo("Authorization not implemented yet... exiting")
+        click.get_current_context().exit(pydor.errors.NOT_IMPLEMENTED)
+    else:
+        raise NotImplementedError()
+
+
 cli.add_command(list)
 cli.add_command(tags)
 cli.add_command(inspect)
 cli.add_command(manifest)
 cli.add_command(ping)
-
+cli.add_command(exists)
 
 if __name__ == '__main__':
     cli()
