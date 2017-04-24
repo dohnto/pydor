@@ -2,6 +2,8 @@
 Python client library for Docker Registry v2
 ============================================
 
+.. image:: https://travis-ci.org/dohnto/pydor.svg?branch=master
+
 **Warning: This code is under development and will change in future version**
 
 Installation and running
