@@ -183,6 +183,8 @@ def exists(image, insecure):
         logging.fatal(e.message)
         click.echo("Consider using --insecure")
         click.get_current_context().exit(pydor.errors.SSL_ERROR_CODE)
+    except requests.exceptions.HTTPError as e:
+        response = e.response
 
     if response.status_code == requests.codes.ok:
         click.echo("OK")

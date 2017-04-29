@@ -66,7 +66,9 @@ class Entity(object):
 
     def request(self, method, **kwargs):
         logging.debug("Calling %s: %s", method, self.url)
-        return requests.request(method, self.url, verify=not self.registry.insecure, **kwargs)
+        response = requests.request(method, self.url, verify=not self.registry.insecure, **kwargs)
+        response.raise_for_status()
+        return response
 
     def get(self, *args, **kwargs):
         return self.request("GET", *args, **kwargs)
