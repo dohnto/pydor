@@ -6,6 +6,7 @@ import itertools
 import requests.exceptions
 import logging
 import json
+import functools
 
 import pydor
 import tablib
@@ -18,6 +19,28 @@ tablib.formats.available += (pydor.tools.tablib_text_module,)
 
 # get all format titles
 OUTPUT_FORMATS = map(lambda m: m.title, tablib.formats.available)
+
+
+def catch_http_errors():
+    def decorator(f):
+        def g(*args, **kwargs):
+            try:
+                result = f(*args, **kwargs)
+            except requests.exceptions.HTTPError as e:
+                if e.response.status_code == requests.codes.unauthorized:
+                    error_message = ""
+                    try:
+                        error_message = e.response.json()["errors"][0]["message"]
+                    except KeyError:
+                        pass
+                    click.echo("{} ... Authorization not implemented yet... exiting".format(error_message))
+                    click.get_current_context().exit(pydor.errors.NOT_IMPLEMENTED)
+                else:
+                    raise e
+            return result
+        return functools.update_wrapper(g, f)
+    return decorator
+
 
 @click.group()
 def cli():
@@ -51,6 +74,7 @@ def _list(generator, limit, output, insecure):
 @click.option('--limit', default=20, help='Number of repositories to show. Use 0 to show all (but note that this might be very time consuming operation).', show_default=True)
 @click.option('--output', default=pydor.tools.tablib_text_module.title, type=click.Choice(OUTPUT_FORMATS), show_default=True, help="Output format.")
 @click.option('--insecure', default=False, is_flag=True, show_default=True, help="If set to true, the registry certificates will not be validated.")
+@catch_http_errors()
 def list(registry, limit, output, insecure):
     """
     List repositories present in docker registry.
@@ -71,6 +95,7 @@ def list(registry, limit, output, insecure):
 @click.option('--limit', default=20, help='Number of tags to show. Use 0 to show all (but note that this might be very time consuming operation).', show_default=True)
 @click.option('--output', default=pydor.tools.tablib_text_module.title, type=click.Choice(OUTPUT_FORMATS), help="Output format.", show_default=True)
 @click.option('--insecure', default=False, is_flag=True, help="If set to true, the registry certificates will not be validated.", show_default=True)
+@catch_http_errors()
 def tags(repository, limit, output, insecure):
     """
     List tags of a given repository.
@@ -91,6 +116,7 @@ def tags(repository, limit, output, insecure):
 @click.command()
 @click.argument('IMAGE')
 @click.option('--insecure', default=False, is_flag=True, help="If set to true, the registry certificates will not be validated.", show_default=True)
+@catch_http_errors()
 def manifest(image, insecure):
     """
     Retrieve a manifest from a docker registry.
@@ -112,6 +138,7 @@ def manifest(image, insecure):
 @click.argument('IMAGE')
 @click.option('--output', default=pydor.tools.tablib_text_module.title, type=click.Choice(OUTPUT_FORMATS), show_default=True, help="Output format.")
 @click.option('--insecure', default=False, is_flag=True,help="If set to true, the registry certificates will not be validated.", show_default=True)
+@catch_http_errors()
 def inspect(type, image, output, insecure):
     """
     Inspect an attribute of a docker image in remote docker registry. TYPE is one of [labels, author, entrypoint, cmd]
@@ -136,6 +163,7 @@ def inspect(type, image, output, insecure):
 @click.command(short_help="Ping a docker registry to check if the address is a valid docker registry and is responding.")
 @click.argument('REGISTRY')
 @click.option('--insecure', default=False, is_flag=True,help="If set to true, the registry certificates will not be validated.", show_default=True)
+@catch_http_errors()
 def ping(registry, insecure):
     """
     Ping a docker registry to check if the address is a valid docker registry and is responding.
@@ -192,7 +220,7 @@ def exists(image, insecure):
         click.echo("NOT FOUND")
         click.get_current_context().exit(pydor.errors.IMAGE_NOT_FOUND)
     elif response.status_code == requests.codes.unauthorized:
-        click.echo("Authorization not implemented yet... exiting")
+        click.echo("Received unauthorized... Authorization not implemented yet... exiting")
         click.get_current_context().exit(pydor.errors.NOT_IMPLEMENTED)
     else:
         raise NotImplementedError()
