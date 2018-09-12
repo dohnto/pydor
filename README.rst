@@ -9,11 +9,6 @@ Python client library for Docker Registry v2
 Installation and running
 ------------------------
 
-From pypi::
-
-      $ pip install pydor
-      $ pydor --help
-
 From github::
 
       $ pip install git+https://github.com/dohnto/pydor
