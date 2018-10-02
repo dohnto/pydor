@@ -7,12 +7,12 @@ import link_header
 import collections
 from .errors import TagNotFound, RepoNotFound
 
-import registry
+from .registry import Registry
 
 class API(object):
     def __init__(self, host, insecure=False, config_file="~/docker/config.json"):
         logging.debug("Creating new registry api: host=%s, insecure=%s, config_file=%s", host, insecure, config_file)
-        self.registry = registry.Registry(host, insecure)
+        self.registry = Registry(host, insecure)
 
 #         self.config_file = (config_file)
 #         if self.config_file:
