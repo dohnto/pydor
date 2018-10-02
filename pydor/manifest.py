@@ -10,7 +10,7 @@ class ManifestItem(object):
 
     @property
     def data(self):
-        return filter(lambda row: row[0] is not None, self._data)
+        return list(filter(lambda row: row[0] is not None, self._data))
 
 
 class Labels(ManifestItem):
