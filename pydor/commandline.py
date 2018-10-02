@@ -18,7 +18,7 @@ import pydor.errors
 tablib.formats.available += (pydor.tools.tablib_text_module,)
 
 # get all format titles
-OUTPUT_FORMATS = map(lambda m: m.title, tablib.formats.available)
+OUTPUT_FORMATS = ["json", "xls", "yaml", "csv", "dbf", "tsv", "html", "latex", "xlsx", "ods", "txt"]
 
 
 def catch_http_errors():
