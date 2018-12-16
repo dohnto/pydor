@@ -3,4 +3,8 @@ python:
   - "2.7"
   - "3.5"
   - "3.6"
-script: make test
+script:
+  - make test
+  - pip install pycodestyle
+  - pycodestyle .
+

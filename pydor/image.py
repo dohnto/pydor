@@ -1,6 +1,7 @@
 import logging
 
-LATEST_TAG="latest"
+LATEST_TAG = "latest"
+
 
 class Image(object):
     def __init__(self, registry, repository, tag=None, digest=None):
@@ -23,7 +24,7 @@ class Image(object):
         if self.tag:
             result += ":" + self.tag
         if self.digest:
-            result+= "@" + self.digest
+            result += "@" + self.digest
         return result
 
     @staticmethod

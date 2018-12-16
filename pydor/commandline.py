@@ -71,9 +71,15 @@ def _list(generator, limit, output, insecure):
 
 @click.command()
 @click.argument('REGISTRY')
-@click.option('--limit', default=20, help='Number of repositories to show. Use 0 to show all (but note that this might be very time consuming operation).', show_default=True)
-@click.option('--output', default=pydor.tools.tablib_text_module.title, type=click.Choice(OUTPUT_FORMATS), show_default=True, help="Output format.")
-@click.option('--insecure', default=False, is_flag=True, show_default=True, help="If set to true, the registry certificates will not be validated.")
+@click.option(
+    '--limit', default=20, show_default=True,
+    help='Number of repositories to show. Use'
+         ' 0 to show all (but note that this might be very time consuming operation).'
+)
+@click.option('--output', default=pydor.tools.tablib_text_module.title, type=click.Choice(OUTPUT_FORMATS),
+              show_default=True, help="Output format.")
+@click.option('--insecure', default=False, is_flag=True, show_default=True,
+              help="If set to true, the registry certificates will not be validated.")
 @catch_http_errors()
 def list(registry, limit, output, insecure):
     """
@@ -92,9 +98,14 @@ def list(registry, limit, output, insecure):
 
 @click.command()
 @click.argument('REPOSITORY')
-@click.option('--limit', default=20, help='Number of tags to show. Use 0 to show all (but note that this might be very time consuming operation).', show_default=True)
-@click.option('--output', default=pydor.tools.tablib_text_module.title, type=click.Choice(OUTPUT_FORMATS), help="Output format.", show_default=True)
-@click.option('--insecure', default=False, is_flag=True, help="If set to true, the registry certificates will not be validated.", show_default=True)
+@click.option(
+    '--limit', default=20,
+    help='Number of tags to show. Use 0 to show all (but note that this might be very time consuming operation).',
+    show_default=True)
+@click.option('--output', default=pydor.tools.tablib_text_module.title, type=click.Choice(OUTPUT_FORMATS),
+              help="Output format.", show_default=True)
+@click.option('--insecure', default=False, is_flag=True,
+              help="If set to true, the registry certificates will not be validated.", show_default=True)
 @catch_http_errors()
 def tags(repository, limit, output, insecure):
     """
@@ -115,7 +126,8 @@ def tags(repository, limit, output, insecure):
 
 @click.command()
 @click.argument('IMAGE')
-@click.option('--insecure', default=False, is_flag=True, help="If set to true, the registry certificates will not be validated.", show_default=True)
+@click.option('--insecure', default=False, is_flag=True,
+              help="If set to true, the registry certificates will not be validated.", show_default=True)
 @catch_http_errors()
 def manifest(image, insecure):
     """
@@ -136,8 +148,10 @@ def manifest(image, insecure):
 @click.command(short_help="Inspect an attribute of a docker image in docker registry.")
 @click.argument('TYPE', type=click.Choice(pydor.MANIFEST_PROPERTIES))
 @click.argument('IMAGE')
-@click.option('--output', default=pydor.tools.tablib_text_module.title, type=click.Choice(OUTPUT_FORMATS), show_default=True, help="Output format.")
-@click.option('--insecure', default=False, is_flag=True,help="If set to true, the registry certificates will not be validated.", show_default=True)
+@click.option('--output', default=pydor.tools.tablib_text_module.title, type=click.Choice(OUTPUT_FORMATS),
+              show_default=True, help="Output format.")
+@click.option('--insecure', default=False, is_flag=True,
+              help="If set to true, the registry certificates will not be validated.", show_default=True)
 @catch_http_errors()
 def inspect(type, image, output, insecure):
     """
@@ -160,9 +174,11 @@ def inspect(type, image, output, insecure):
     click.echo(getattr(dataset, output))
 
 
-@click.command(short_help="Ping a docker registry to check if the address is a valid docker registry and is responding.")
+@click.command(short_help="Ping a docker registry to check if "
+                          "the address is a valid docker registry and is responding.")
 @click.argument('REGISTRY')
-@click.option('--insecure', default=False, is_flag=True,help="If set to true, the registry certificates will not be validated.", show_default=True)
+@click.option('--insecure', default=False, is_flag=True,
+              help="If set to true, the registry certificates will not be validated.", show_default=True)
 @catch_http_errors()
 def ping(registry, insecure):
     """
@@ -194,7 +210,8 @@ def ping(registry, insecure):
 
 @click.command(short_help="Checks whether image reference exists")
 @click.argument('IMAGE')
-@click.option('--insecure', default=False, is_flag=True,help="If set to true, the registry certificates will not be validated.", show_default=True)
+@click.option('--insecure', default=False, is_flag=True,
+              help="If set to true, the registry certificates will not be validated.", show_default=True)
 def exists(image, insecure):
     """
     Checks whether image reference exists

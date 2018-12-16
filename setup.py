@@ -37,7 +37,7 @@ setup(
     keywords='docker registry distribution',
     packages=find_packages(exclude=['test']),
     install_requires=['click', "LinkHeader", "requests", "six", "tablib", "urllib3"],
-    entry_points = {
+    entry_points={
         'console_scripts': ['pydor=pydor.commandline:cli'],
     }
 )

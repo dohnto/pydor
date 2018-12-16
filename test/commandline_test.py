@@ -7,8 +7,8 @@ import requests_mock
 
 
 class TestCommandline(unittest.TestCase):
-    #@requests_mock.mock()
-    #def test_tags_non_existing(self, m):
+    # @requests_mock.mock()
+    # def test_tags_non_existing(self, m):
     #    api = pydor.api.API('registry.test')
     #    with open("test/mock/manifest/list_tags_name_unknown.json") as mock_response_file:
     #        mock_response = mock_response_file.read()

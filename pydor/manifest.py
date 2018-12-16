@@ -3,6 +3,7 @@ import logging
 
 MANIFEST_PROPERTIES = ["labels", "author", "entrypoint", "cmd"]
 
+
 class ManifestItem(object):
     def __init__(self, headers, data=None):
         self.headers = headers
@@ -17,17 +18,21 @@ class Labels(ManifestItem):
     def __init__(self, data):
         super(Labels, self).__init__(["name", "value"], data)
 
+
 class Author(ManifestItem):
     def __init__(self, data):
         super(Author, self).__init__(["author"], [[data]])
+
 
 class Entrypoint(ManifestItem):
     def __init__(self, data):
         super(Entrypoint, self).__init__(["entrypoint"], map(lambda i: [i], data))
 
+
 class Cmd(ManifestItem):
     def __init__(self, data):
         super(Cmd, self).__init__(["cmd"], map(lambda i: [i], data))
+
 
 class Manifest(object):
     def __init__(self, obj):

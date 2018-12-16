@@ -22,6 +22,8 @@ class TestManifest(unittest.TestCase):
     def test_unauthorized(self, m):
         with open("test/mock/manifest/unauthorized.json") as mock_response_file:
             mock_response = mock_response_file.read()
-            m.get('https://docker.elastic.co/v2/elasticsearch/elasticsearch/manifests/5.3.0', text=mock_response, status_code=401)
+            m.get('https://docker.elastic.co/v2/elasticsearch/elasticsearch/manifests/5.3.0', text=mock_response,
+                  status_code=401)
             with self.assertRaises(requests.exceptions.HTTPError) as c:
-                manifest = pydor.Manifest(pydor.API("docker.elastic.co").Manifest("elasticsearch/elasticsearch", "5.3.0").get())
+                manifest = pydor.Manifest(pydor.API("docker.elastic.co").Manifest("elasticsearch/elasticsearch",
+                                                                                  "5.3.0").get())

@@ -9,6 +9,7 @@ from .errors import TagNotFound, RepoNotFound
 
 from .registry import Registry
 
+
 class API(object):
     def __init__(self, host, insecure=False, config_file="~/docker/config.json"):
         logging.debug("Creating new registry api: host=%s, insecure=%s, config_file=%s", host, insecure, config_file)
@@ -49,7 +50,8 @@ class API(object):
 
     def BlobUpload(self, name, uuid):
         return BlobUpload(self.registry, name, uuid)
-#
+
+
 class Entity(object):
     url = None
 
@@ -92,6 +94,7 @@ class Base(Entity):
     def __init__(self, registry):
         Entity.__init__(self, registry)
 
+
 class Catalog(Entity):
     relative_url = "/v2/_catalog"
     response_key = "repositories"
@@ -102,6 +105,7 @@ class Catalog(Entity):
 
     def __iter__(self):
         return EntityIterator(self.__class__, self.registry)
+
 
 class EntityIterator(object):
     def __init__(self, cls, registry, *args, **kwargs):
@@ -167,7 +171,6 @@ class Tags(Entity):
 
     def __iter__(self):
         return EntityIterator(self.__class__, self.registry, self.name)
-
 
 
 class Manifest(Entity):
