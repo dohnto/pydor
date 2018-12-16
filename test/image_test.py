@@ -116,6 +116,7 @@ class TestImagePositive(unittest.TestCase):
         self.assertEqual(image.tag, None)
         self.assertEqual(image.digest, None)
 
+
 class TestImageNegative(unittest.TestCase):
     def test_parsing_basic(self):
         with self.assertRaises(AttributeError):

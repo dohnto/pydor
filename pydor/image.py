@@ -1,6 +1,6 @@
 import logging
 
-LATEST_TAG="latest"
+LATEST_TAG = "latest"
 
 
 class Image(object):

@@ -35,7 +35,7 @@ class TestApi(unittest.TestCase):
         m.get('http://localhost:5000/v2/a/tags/list', text='{"name":"a","tags":["latest"]}')
         result = api.Tags("a").get()
         self.assertEqual(result.status_code, requests.codes.ok)
-        self.assertEqual(result.text, '{"name":"a","tags":["latest"]}')    \
+        self.assertEqual(result.text, '{"name":"a","tags":["latest"]}')
 
     @requests_mock.mock()
     def test_connection_error(self, m):

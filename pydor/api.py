@@ -94,6 +94,7 @@ class Base(Entity):
     def __init__(self, registry):
         Entity.__init__(self, registry)
 
+
 class Catalog(Entity):
     relative_url = "/v2/_catalog"
     response_key = "repositories"
@@ -104,6 +105,7 @@ class Catalog(Entity):
 
     def __iter__(self):
         return EntityIterator(self.__class__, self.registry)
+
 
 class EntityIterator(object):
     def __init__(self, cls, registry, *args, **kwargs):

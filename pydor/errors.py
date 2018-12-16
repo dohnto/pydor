@@ -1,10 +1,13 @@
-class EntityNotFound(ValueError): pass
+class EntityNotFound(ValueError):
+    pass
 
 
-class TagNotFound(EntityNotFound): pass
+class TagNotFound(EntityNotFound):
+    pass
 
 
-class RepoNotFound(EntityNotFound): pass
+class RepoNotFound(EntityNotFound):
+    pass
 
 
 SSL_ERROR_CODE = 1

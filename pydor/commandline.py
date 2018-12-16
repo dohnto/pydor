@@ -73,7 +73,8 @@ def _list(generator, limit, output, insecure):
 @click.argument('REGISTRY')
 @click.option(
     '--limit', default=20, show_default=True,
-    help='Number of repositories to show. Use 0 to show all (but note that this might be very time consuming operation).'
+    help='Number of repositories to show. Use'
+         ' 0 to show all (but note that this might be very time consuming operation).'
 )
 @click.option('--output', default=pydor.tools.tablib_text_module.title, type=click.Choice(OUTPUT_FORMATS),
               show_default=True, help="Output format.")
@@ -147,7 +148,8 @@ def manifest(image, insecure):
 @click.command(short_help="Inspect an attribute of a docker image in docker registry.")
 @click.argument('TYPE', type=click.Choice(pydor.MANIFEST_PROPERTIES))
 @click.argument('IMAGE')
-@click.option('--output', default=pydor.tools.tablib_text_module.title, type=click.Choice(OUTPUT_FORMATS), show_default=True, help="Output format.")
+@click.option('--output', default=pydor.tools.tablib_text_module.title, type=click.Choice(OUTPUT_FORMATS),
+              show_default=True, help="Output format.")
 @click.option('--insecure', default=False, is_flag=True,
               help="If set to true, the registry certificates will not be validated.", show_default=True)
 @catch_http_errors()
@@ -172,7 +174,8 @@ def inspect(type, image, output, insecure):
     click.echo(getattr(dataset, output))
 
 
-@click.command(short_help="Ping a docker registry to check if the address is a valid docker registry and is responding.")
+@click.command(short_help="Ping a docker registry to check if "
+                          "the address is a valid docker registry and is responding.")
 @click.argument('REGISTRY')
 @click.option('--insecure', default=False, is_flag=True,
               help="If set to true, the registry certificates will not be validated.", show_default=True)
@@ -246,7 +249,6 @@ cli.add_command(inspect)
 cli.add_command(manifest)
 cli.add_command(ping)
 cli.add_command(exists)
-cli.add_command(delete)
 
 if __name__ == '__main__':
     cli()
