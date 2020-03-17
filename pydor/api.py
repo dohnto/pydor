@@ -11,9 +11,12 @@ from .registry import Registry
 
 
 class API(object):
-    def __init__(self, host, insecure=False, config_file="~/docker/config.json"):
-        logging.debug("Creating new registry api: host=%s, insecure=%s, config_file=%s", host, insecure, config_file)
-        self.registry = Registry(host, insecure)
+    def __init__(self, host, insecure=False, config_file="~/docker/config.json", verify_tls=None):
+        logging.debug(
+            "Creating new registry api: host=%s, insecure=%s, config_file=%s, verify_tls=%s",
+            host, insecure, config_file, verify_tls
+        )
+        self.registry = Registry(host, insecure, verify_tls)
 
 #         self.config_file = (config_file)
 #         if self.config_file:
@@ -64,11 +67,11 @@ class Entity(object):
 
     @property
     def verify(self):
-        return not self.registry.insecure
+        return self.registry.verify_tls
 
     def request(self, method, **kwargs):
         logging.debug("Calling %s: %s", method, self.url)
-        response = requests.request(method, self.url, verify=not self.registry.insecure, **kwargs)
+        response = requests.request(method, self.url, verify=self.verify, **kwargs)
         response.raise_for_status()
         return response
 
